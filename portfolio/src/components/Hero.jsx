@@ -4,26 +4,21 @@ import resumePdf from '../assets/resume/resume.pdf'
 
 export default function Hero() {
   const heroRef = useRef(null)
-  const [dims, setDims] = useState({ w: 0, h: 0 })
-  const [imgNatural, setImgNatural] = useState({ w: 0, h: 0 })
+  const [isMobile, setIsMobile] = useState(false)
   const [showScroll, setShowScroll] = useState(false)
+
+  // Detect mobile breakpoint
+  useEffect(() => {
+    const check = () => setIsMobile(window.innerWidth < 768)
+    check()
+    window.addEventListener('resize', check)
+    return () => window.removeEventListener('resize', check)
+  }, [])
 
   // Show scroll indicator after 5 seconds
   useEffect(() => {
     const timer = setTimeout(() => setShowScroll(true), 5000)
     return () => clearTimeout(timer)
-  }, [])
-
-  // Recalculate overlay positions on resize
-  useEffect(() => {
-    const update = () => {
-      if (heroRef.current) {
-        setDims({ w: heroRef.current.offsetWidth, h: heroRef.current.offsetHeight })
-      }
-    }
-    update()
-    window.addEventListener('resize', update)
-    return () => window.removeEventListener('resize', update)
   }, [])
 
   const scrollToAbout = () => {
@@ -47,16 +42,16 @@ export default function Hero() {
       className="relative w-full overflow-hidden"
       style={{ height: '100vh', minHeight: '600px' }}
     >
-      {/* Hero image — full screen, EXACTLY as provided, no filters, no overlays */}
+      {/* Hero image — full cover background */}
       <img
         src={heroImg}
         alt="Mohammed Noufal V — AI Engineer & Full Stack Developer"
-        onLoad={(e) => setImgNatural({ w: e.target.naturalWidth, h: e.target.naturalHeight })}
         style={{
           width: '100%',
           height: '100%',
           objectFit: 'cover',
-          objectPosition: 'center top',
+          /* On mobile, shift focus to the right so the person stays visible */
+          objectPosition: isMobile ? '68% top' : 'center top',
           display: 'block',
           position: 'absolute',
           inset: 0,
@@ -64,9 +59,74 @@ export default function Hero() {
         draggable={false}
       />
 
-      {/*
-        Invisible clickable overlays — positioned over the buttons already drawn inside the hero image.
-        The hero image contains two visible buttons: "Explore My Work" (primary) and "Download Resume" (outline).
+      {/* Mobile overlay — gradient + real text so content is always readable */}
+      {isMobile && (
+        <>
+          {/* Dark gradient overlay for text readability */}
+          <div
+            className="absolute inset-0 z-10"
+            style={{
+              background:
+                'linear-gradient(to top, rgba(0,0,0,0.92) 0%, rgba(0,0,0,0.6) 40%, rgba(0,0,0,0.15) 70%, transparent 100%)',
+            }}
+          />
+
+          {/* Mobile text content — overlaid at the bottom */}
+          <div className="absolute inset-x-0 bottom-0 z-10 px-6 pb-24 pt-8 flex flex-col items-start gap-4">
+            <p
+              className="text-base font-light tracking-wide"
+              style={{ color: '#D4956A' }}
+            >
+              Hi There, I am
+            </p>
+            <h1 className="text-[2.2rem] leading-[1.1] font-extrabold text-white">
+              Mohammed<br />Noufal
+            </h1>
+            <p
+              className="text-lg font-semibold leading-snug"
+              style={{ color: '#D4956A' }}
+            >
+              AI Engineer &amp;<br />Software Developer
+            </p>
+            <p className="text-gray-400 text-sm leading-relaxed max-w-[280px]">
+              Building intelligent solutions with code, creating impact through technology.
+            </p>
+
+            <div className="flex gap-3 mt-2 w-full">
+              <button
+                onClick={scrollToAbout}
+                className="flex items-center justify-center gap-2 px-5 py-3 rounded-lg text-sm font-bold tracking-wide transition-all duration-300"
+                style={{
+                  background: 'linear-gradient(135deg, #C47B3F, #A0622F)',
+                  color: '#fff',
+                  border: 'none',
+                  boxShadow: '0 4px 20px rgba(196,123,63,0.4)',
+                  flex: '1',
+                }}
+              >
+                <span style={{ fontFamily: 'monospace', fontSize: '14px' }}>&lt;/&gt;</span>
+                Explore My Work
+              </button>
+              <button
+                onClick={downloadResume}
+                className="flex items-center justify-center gap-2 px-5 py-3 rounded-lg text-sm font-bold tracking-wide transition-all duration-300"
+                style={{
+                  background: 'transparent',
+                  color: '#D4956A',
+                  border: '1.5px solid rgba(196,123,63,0.6)',
+                  flex: '1',
+                }}
+              >
+                📄 Resume
+              </button>
+            </div>
+          </div>
+        </>
+      )}
+
+      {/* Desktop: invisible clickable overlays over the image buttons are not needed
+           since desktop shows the original image perfectly */}
+
       {/* Scroll indicator — shown after 5 seconds */}
       {showScroll && (
         <div
