@@ -23,6 +23,42 @@ const fadeUp = {
   }),
 }
 
+// Cinematic zoom-out reveal: starts oversized → snaps to natural size
+const photoZoomOut = {
+  hidden: {
+    opacity: 0,
+    scale: 1.38,
+    filter: 'blur(18px) brightness(0.6)',
+    y: 30,
+  },
+  visible: {
+    opacity: 1,
+    scale: 1,
+    filter: 'blur(0px) brightness(1)',
+    y: 0,
+    transition: {
+      duration: 0.9,
+      ease: [0.16, 1, 0.3, 1],   // custom spring-like easing
+      opacity: { duration: 0.5 },
+    },
+  },
+}
+
+// The wrapper card also gets a subtle scale-in with spring
+const cardReveal = {
+  hidden: { opacity: 0, scale: 0.88 },
+  visible: {
+    opacity: 1,
+    scale: 1,
+    transition: {
+      type: 'spring',
+      stiffness: 90,
+      damping: 18,
+      mass: 0.9,
+    },
+  },
+}
+
 const textVariants = {
   hidden: { opacity: 0 },
   visible: {
@@ -85,7 +121,7 @@ export default function About() {
             initial="hidden"
             whileInView="visible"
             viewport={{ once: true, margin: '-60px' }}
-            variants={fadeUp}
+            variants={cardReveal}
             className="flex justify-center lg:justify-end"
           >
             <div className="relative">
@@ -95,24 +131,36 @@ export default function About() {
                 transition={{ duration: 25, repeat: Infinity, ease: 'linear' }}
                 className="absolute inset-[-20px] rounded-3xl border border-dashed border-[#10B981]/20 pointer-events-none"
               />
-              {/* Glow halo */}
+              {/* Glow halo — pulses brighter after reveal */}
               <div className="absolute inset-[-10px] rounded-3xl bg-gradient-to-br from-[#10B981]/15 via-transparent to-[#34D399]/10 animate-glow-pulse pointer-events-none" />
 
-              {/* Profile image */}
+              {/* Profile image — zoom-out cinematic reveal */}
               <motion.div
-                animate={{ y: [0, -14, 0] }}
-                transition={{ duration: 7, repeat: Infinity, ease: 'easeInOut' }}
-                className="relative w-72 h-[340px] lg:w-[300px] lg:h-[380px] rounded-3xl overflow-hidden"
+                initial="hidden"
+                whileInView="visible"
+                viewport={{ once: true, margin: '-60px' }}
+                variants={photoZoomOut}
+                className="relative overflow-hidden rounded-3xl"
                 style={{
-                  border: '2px solid rgba(16,185,129,0.45)',
-                  boxShadow: '0 0 60px rgba(16,185,129,0.25), 0 0 120px rgba(16,185,129,0.1), 0 30px 80px rgba(0,0,0,0.5)',
+                  width: '340px',
+                  height: '430px',
+                  border: '2px solid rgba(16,185,129,0.50)',
+                  boxShadow:
+                    '0 0 0 1px rgba(16,185,129,0.10), 0 0 70px rgba(16,185,129,0.30), 0 0 140px rgba(16,185,129,0.12), 0 40px 90px rgba(0,0,0,0.6)',
                 }}
               >
-                <img
-                  src={profileImg}
-                  alt="Mohammed Noufal V"
-                  className="w-full h-full object-cover object-top"
-                />
+                {/* Floating bob sits INSIDE so it doesn't clip the zoom */}
+                <motion.div
+                  animate={{ y: [0, -14, 0] }}
+                  transition={{ duration: 7, repeat: Infinity, ease: 'easeInOut' }}
+                  className="w-full h-full"
+                >
+                  <img
+                    src={profileImg}
+                    alt="Mohammed Noufal V"
+                    className="w-full h-full object-cover object-top"
+                  />
+                </motion.div>
                 <div className="absolute inset-x-0 bottom-0 h-1/3 bg-gradient-to-t from-[#020C08] to-transparent" />
                 <div className="absolute bottom-0 inset-x-0 p-5">
                   <div className="flex items-center gap-2.5">
@@ -127,7 +175,7 @@ export default function About() {
                 initial={{ opacity: 0, scale: 0.8 }}
                 whileInView={{ opacity: 1, scale: 1 }}
                 viewport={{ once: true }}
-                transition={{ delay: 0.6 }}
+                transition={{ delay: 0.8, type: 'spring', stiffness: 120 }}
                 animate={{ y: [0, -8, 0] }}
                 className="absolute -bottom-8 -right-8"
               >
@@ -145,8 +193,11 @@ export default function About() {
               </motion.div>
 
               <motion.div
+                initial={{ opacity: 0, scale: 0.8 }}
+                whileInView={{ opacity: 1, scale: 1 }}
+                viewport={{ once: true }}
+                transition={{ delay: 0.9, type: 'spring', stiffness: 120 }}
                 animate={{ y: [0, -8, 0] }}
-                transition={{ duration: 5.5, repeat: Infinity, ease: 'easeInOut', delay: 1.2 }}
                 className="absolute -top-8 -left-8"
               >
                 <div
