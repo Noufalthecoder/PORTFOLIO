@@ -124,7 +124,25 @@ export const wins = [
   { place: 'Runner-up', event: 'National Startup Summit', by: 'AICCI, StartupTN', built: 'Salt-pan monitoring and an Artemia B2B marketplace' },
 ];
 
-export const moments = [1, 2, 3, 4, 5].map((i) => `/img/moments/m${i}.jpg`);
+// The scroll-through story in the Wins section. `inset` is an optional second photo.
+export const story = {
+  kicker: 'Behind the trophies',
+  title: ['How a win', 'actually', 'happens.'],
+  chapters: [
+    { title: 'Build.', text: 'It starts with a laptop, a problem and not enough hours. Most of a hackathon looks exactly like this.',
+      image: '/img/story/desk.jpg', alt: 'Noufal working at a laptop during a hackathon' },
+    { title: 'Pitch.', text: 'Then you stand up and defend it. This is Pannai Smart Pan, salt-pan monitoring and an Artemia marketplace, in front of the jury at the AICCI National Startup Summit.',
+      image: '/img/story/pitch.jpg', alt: 'Noufal pitching on stage with his team', inset: '/img/story/slide.jpg', insetAlt: 'The validation slide from the pitch' },
+    { title: 'Team.', text: 'Nobody ships alone. The team at the National Startup Summit in Thoothukudi.',
+      image: '/img/story/team.jpg', alt: 'The team at the National Startup Summit' },
+    { title: 'Win.', text: 'Sometimes it ends with a trophy and a cheque: ₹25,000 from the AICCI hackathon.',
+      image: '/img/story/trophy.jpg', alt: 'Noufal holding a trophy', pos: 'center 18%', inset: '/img/story/cheque.jpg', insetAlt: 'The team receiving the prize cheque on stage' },
+    { title: 'Go bigger.', text: 'Moonshot Hackathon 2026: Outstanding Innovation Award, Civilization Impact Award and a top-100 finish as Team Impact Minds.',
+      image: '/img/story/moonshot.jpg', alt: 'Moonshot Hackathon 2026 winners poster for Team Impact Minds', fit: 'contain' },
+    { title: 'Repeat.', text: 'Then do it again. Agent Build Day at HackerEarth, Prism at CIT, and whatever comes next.',
+      image: '/img/story/hackerearth.jpg', alt: 'Noufal at the HackerEarth office', inset: '/img/story/prism.jpg', insetAlt: 'On stage at the Prism hackathon at Chennai Institute of Technology' },
+  ],
+};
 
 export const numbers = [
   { n: 700, suffix: '+', label: 'LeetCode problems solved' },

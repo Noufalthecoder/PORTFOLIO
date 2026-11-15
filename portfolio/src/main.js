@@ -39,7 +39,10 @@ const hero = `
 const about = `
 <section class="section about" id="about">
   ${kicker('00', 'About')}
-  <p class="about-lead reveal">${esc(D.about.lead)}</p>
+  <div class="about-top">
+    <figure class="about-photo reveal"><img src="/img/me.jpg" alt="Mohammed Noufal" width="480" height="600" /></figure>
+    <p class="about-lead reveal" style="--d:120ms">${esc(D.about.lead)}</p>
+  </div>
   <dl class="about-meta">
     ${D.about.meta.map(([k, v], i) => `<div class="reveal" style="--d:${i * 70}ms"><dt>${esc(k)}</dt><dd>${esc(v)}</dd></div>`).join('')}
   </dl>
@@ -105,9 +108,37 @@ const experience = `
   </div>
 </section>`;
 
+const chapter = (c, i) => `
+<article class="chapter">
+  <figure class="${c.fit === 'contain' ? 'contain' : ''}">
+    <img src="${c.image}" alt="${esc(c.alt)}" loading="lazy" style="${c.pos ? `object-position:${c.pos}` : ''}" />
+    ${c.inset ? `<img class="inset" src="${c.inset}" alt="${esc(c.insetAlt)}" loading="lazy" />` : ''}
+  </figure>
+  <div>
+    <p class="chapter-num">0${i + 1} / 0${D.story.chapters.length}</p>
+    <h3>${esc(c.title)}</h3>
+    <p class="chapter-text">${esc(c.text)}</p>
+  </div>
+</article>`;
+
+const story = `
+<section class="story" id="story" aria-label="How a win happens, in photos">
+  <div class="story-pin">
+    <div class="story-track">
+      <div class="story-intro">
+        <p class="kicker"><span>03</span> ${esc(D.story.kicker)}</p>
+        <h2>${D.story.title.map(esc).join('<br />')}</h2>
+        <p class="story-hint">Keep scrolling ${arrow}</p>
+      </div>
+      ${D.story.chapters.map(chapter).join('')}
+    </div>
+    <div class="story-bar"><i></i></div>
+  </div>
+</section>`;
+
 const wins = `
 <section class="section wins" id="wins">
-  ${kicker('03', 'Wins')}
+  ${kicker('04', 'Wins')}
   <h2 class="reveal">10+ hackathon wins,<br />national and international.</h2>
   <ol class="win-list">
     ${D.wins.map((w) => `
@@ -117,11 +148,6 @@ const wins = `
       <span class="win-built">${esc(w.built)}</span>
     </li>`).join('')}
   </ol>
-  <div class="moments reveal" aria-label="Photos from hackathons and pitches">
-    <div class="moments-track">
-      ${[0, 1].map((k) => D.moments.map((m, i) => `<img src="${m}" alt="${k ? '' : `Hackathon moment ${i + 1}`}" loading="lazy" ${k ? 'aria-hidden="true"' : ''} />`).join('')).join('')}
-    </div>
-  </div>
   <div class="numbers">
     ${D.numbers.map((x, i) => `<div class="reveal" style="--d:${i * 80}ms"><strong data-count="${x.n}" data-suffix="${x.suffix}">${x.n}${x.suffix}</strong><span>${esc(x.label)}</span></div>`).join('')}
   </div>
@@ -130,7 +156,7 @@ const wins = `
 const chip = ([name, slug, color]) => `<span class="chip">${slug && logos[slug] ? `<svg viewBox="0 0 24 24" aria-hidden="true"><path d="${logos[slug]}" fill="${color}"/></svg>` : ''}${esc(name)}</span>`;
 const stack = `
 <section class="section" id="stack">
-  ${kicker('04', 'Stack')}
+  ${kicker('05', 'Stack')}
   <h2 class="reveal">What I build with.</h2>
   <div class="stack">
     ${D.stack.map((g) => `<div class="stack-row reveal"><p>${esc(g.label)}</p><div>${g.items.map(chip).join('')}</div></div>`).join('')}
@@ -143,7 +169,7 @@ const stack = `
 
 const contact = `
 <section class="contact" id="contact">
-  <p class="kicker reveal"><span>05</span> Contact</p>
+  <p class="kicker reveal"><span>06</span> Contact</p>
   <h2 class="reveal">Building something<br />with AI? <em>Let’s talk.</em></h2>
   <a class="mail reveal" href="mailto:${D.links.email}">${D.links.email} ${arrow}</a>
   <p class="contact-links reveal">
@@ -155,7 +181,7 @@ const contact = `
   <p class="foot">Mohammed Noufal V / Chennai, India / ${new Date().getFullYear()}</p>
 </section>`;
 
-document.getElementById('app').innerHTML = `${nav}<main>${hero}${about}${marquee}${work}${experience}${wins}${stack}</main>${contact}`;
+document.getElementById('app').innerHTML = `${nav}<main>${hero}${about}${marquee}${work}${experience}${story}${wins}${stack}</main>${contact}`;
 
 // ---- behaviour
 const heroEl = document.getElementById('top');
@@ -189,10 +215,36 @@ function countUp(el) {
 
 const navEl = document.getElementById('nav');
 const parallax = [...document.querySelectorAll('[data-parallax]')];
+
+// The story pins to the screen and moves sideways as you scroll down.
+const storyEl = document.getElementById('story');
+const trackEl = storyEl.querySelector('.story-track');
+const barEl = storyEl.querySelector('.story-bar i');
+const wide = matchMedia('(min-width: 900px)');
+let storyTravel = 0;
+function sizeStory() {
+  const pinned = wide.matches && !reduce;
+  storyEl.classList.toggle('pinned', pinned);
+  storyTravel = pinned ? Math.max(0, trackEl.scrollWidth - innerWidth) : 0;
+  storyEl.style.height = pinned ? `${storyTravel + innerHeight}px` : '';
+  if (!pinned) trackEl.style.transform = '';
+}
+sizeStory();
+addEventListener('resize', sizeStory);
+addEventListener('load', sizeStory);
+storyEl.querySelectorAll('img').forEach((img) => img.addEventListener('load', sizeStory, { once: true }));
+
 let ticking = false;
 function onScroll() {
   ticking = false;
   navEl.classList.toggle('solid', scrollY > heroEl.offsetHeight - 80);
+  const sr = storyEl.getBoundingClientRect();
+  navEl.classList.toggle('on-dark', sr.top < 60 && sr.bottom > 60);
+  if (storyTravel) {
+    const k = Math.min(1, Math.max(0, -sr.top / storyTravel));
+    trackEl.style.transform = `translate3d(${(-k * storyTravel).toFixed(1)}px, 0, 0)`;
+    barEl.style.transform = `scaleX(${k.toFixed(4)})`;
+  }
   if (reduce) return;
   for (const img of parallax) {
     const r = img.parentElement.getBoundingClientRect();

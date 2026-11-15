@@ -162,7 +162,6 @@ export function mountHero(canvas, section) {
     look.lerp(target, 0.05);
     if (!reduce) {
       group.rotation.y = look.x * 0.28;
-      group.rotation.x = -look.y * 0.16;
     }
     renderer.render(scene, camera);
   }
