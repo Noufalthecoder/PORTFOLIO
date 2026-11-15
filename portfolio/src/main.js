@@ -167,16 +167,17 @@ const stack = `
   </ul>
 </section>`;
 
+const icon = (d) => `<svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="${d}" fill="currentColor" fill-rule="evenodd"/></svg>`;
 const contact = `
 <section class="contact" id="contact">
   <p class="kicker reveal"><span>06</span> Contact</p>
   <h2 class="reveal">Building something<br />with AI? <em>Let’s talk.</em></h2>
   <a class="mail reveal" href="mailto:${D.links.email}">${D.links.email} ${arrow}</a>
   <p class="contact-links reveal">
-    <a href="${D.links.linkedin}" ${ext}>LinkedIn ${arrow}</a>
-    <a href="${D.links.github}" ${ext}>GitHub ${arrow}</a>
-    <a href="${D.links.leetcode}" ${ext}>LeetCode ${arrow}</a>
-    <a href="${D.links.resume}" download>Resume ${arrow}</a>
+    <a href="${D.links.linkedin}" ${ext}>${icon(logos.linkedin)}LinkedIn</a>
+    <a href="${D.links.github}" ${ext}>${icon(logos.github)}GitHub</a>
+    <a href="${D.links.leetcode}" ${ext}>${icon(logos.leetcode)}LeetCode</a>
+    <a href="${D.links.resume}" download>${icon('M6 2h8l6 6v12a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2zm7 1.5V9h5.5zM8 13v1.6h8V13zm0 3.6v1.6h5.5v-1.6z')}Resume</a>
   </p>
   <p class="foot">Mohammed Noufal V / Chennai, India / ${new Date().getFullYear()}</p>
 </section>`;

@@ -309,3 +309,9 @@ h2 { font-size: clamp(40px, 6.6vw, 96px); line-height: 0.95; font-weight: 800; f
 
 .nav.solid.on-dark { background: rgba(16, 17, 20, 0.82); color: #fff; box-shadow: 0 1px 0 rgba(255, 255, 255, 0.12); }
 .nav.solid.on-dark .brand i { color: #8c97ff; }
+
+/* contact links with icons */
+.contact-links { gap: 12px; }
+.contact-links a { display: inline-flex; align-items: center; gap: 10px; padding: 13px 20px; border: 1px solid rgba(255, 255, 255, 0.45); border-radius: 999px; background: none; transition: background 0.25s, color 0.25s, transform 0.35s var(--ease); }
+.contact-links a:hover { background: #fff; color: var(--ink); transform: translateY(-2px); }
+.icon { width: 18px; height: 18px; flex: none; }
