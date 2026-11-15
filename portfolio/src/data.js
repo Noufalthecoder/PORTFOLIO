@@ -135,7 +135,7 @@ export const story = {
       image: '/img/story/pitch.jpg', alt: 'Noufal pitching on stage with his team', inset: '/img/story/slide.jpg', insetAlt: 'The validation slide from the pitch' },
     { title: 'Team.', text: 'Nobody ships alone. The team at the National Startup Summit in Thoothukudi.',
       image: '/img/story/team.jpg', alt: 'The team at the National Startup Summit' },
-    { title: 'Win.', text: 'Sometimes it ends with a trophy and a cheque: ₹25,000 from the AICCI hackathon.',
+    { title: 'Win.', text: 'Sometimes it ends with a trophy in your hands and the whole team on stage.',
       image: '/img/story/trophy.jpg', alt: 'Noufal holding a trophy', pos: 'center 18%', inset: '/img/story/cheque.jpg', insetAlt: 'The team receiving the prize cheque on stage' },
     { title: 'Go bigger.', text: 'Moonshot Hackathon 2026: Outstanding Innovation Award, Civilization Impact Award and a top-100 finish as Team Impact Minds.',
       image: '/img/story/moonshot.jpg', alt: 'Moonshot Hackathon 2026 winners poster for Team Impact Minds', fit: 'contain' },
